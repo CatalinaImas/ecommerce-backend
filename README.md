@@ -1,12 +1,32 @@
 # Urban Plant Cookies — Backend
 
-API REST del e-commerce **Urban Plant Cookies** (tercera entrega del proyecto integrador). Se conecta con el frontend en React: [ecommerce-frontend](https://github.com/CatalinaImas/ecommerce-frontend).
+API REST del e-commerce **Urban Plant Cookies** (entrega final del proyecto integrador). Autenticación con JWT, base de datos en MongoDB Atlas, imágenes en Cloudinary y pagos con MercadoPago.
+
+## Links
+
+| | |
+| --- | --- |
+| ⚙️ API en producción | https://ecommerce-backend-eoq6.onrender.com |
+| 🌐 Frontend (sitio) | https://ecommerce-frontend-4u4q.onrender.com |
+| 📦 Repositorio del backend | https://github.com/CatalinaImas/ecommerce-backend |
+| 📦 Repositorio del frontend | https://github.com/CatalinaImas/ecommerce-frontend |
+
+> Está en el plan gratuito de Render: si estuvo inactivo, la primera petición puede tardar hasta un minuto.
 
 ## Tecnologías
 
-Node.js · Express · MongoDB Atlas (Mongoose) · JWT · bcrypt · Multer + Cloudinary · MercadoPago (Checkout Pro) · CORS · dotenv
+Node.js · Express · MongoDB Atlas (Mongoose) · JWT (jsonwebtoken) · bcrypt · Multer + Cloudinary · MercadoPago (Checkout Pro) · CORS · dotenv
 
-## Cómo correrlo
+## Usuarios de prueba
+
+| Rol | Email | Contraseña |
+| --- | --- | --- |
+| Admin | admin@admin.com | 1234 |
+| Cliente | cliente@cliente.com | 1234 |
+
+Las contraseñas se guardan hasheadas con bcrypt.
+
+## Cómo correrlo en local
 
 Requisito: Node.js 18 o superior.
 
@@ -16,7 +36,7 @@ cd ecommerce-backend
 npm install
 ```
 
-1. Copiar `.env.example` como `.env` y completar los valores (MongoDB, JWT, Cloudinary y MercadoPago).
+1. Copiar `.env.example` como `.env` y completar los valores (ver la tabla de abajo).
 2. Cargar los usuarios de prueba, las categorías y los productos de ejemplo:
 
 ```bash
@@ -36,22 +56,13 @@ El servidor queda en `http://localhost:3000`.
 
 | Variable | Descripción |
 | --- | --- |
-| `PORT` | Puerto del servidor |
+| `PORT` | Puerto del servidor (en Render lo asigna la plataforma) |
 | `MONGODB_URI` | Connection string de MongoDB Atlas |
 | `JWT_SECRET` | Clave para firmar los tokens |
 | `CLOUDINARY_CLOUD_NAME`, `CLOUDINARY_API_KEY`, `CLOUDINARY_API_SECRET` | Credenciales de Cloudinary |
 | `MP_ACCESS_TOKEN` | Access Token de MercadoPago (solo vive en el backend) |
 | `FRONTEND_URL` | URL del frontend (a donde vuelve MercadoPago) |
 | `BACKEND_URL` | URL pública de este backend (webhook de MercadoPago) |
-
-## Usuarios de prueba
-
-| Rol | Email | Contraseña |
-| --- | --- | --- |
-| Admin | admin@admin.com | 1234 |
-| Cliente | cliente@cliente.com | 1234 |
-
-Las contraseñas se guardan hasheadas con bcrypt.
 
 ## Endpoints
 
@@ -69,9 +80,11 @@ Las contraseñas se guardan hasheadas con bcrypt.
 | PUT | `/api/products/:id` | admin | Actualizar producto |
 | DELETE | `/api/products/:id` | admin | Eliminar producto |
 | GET | `/api/categories` | — | Listar categorías |
-| POST / PUT / DELETE | `/api/categories[/:id]` | admin | Gestionar categorías |
+| POST | `/api/categories` | admin | Crear categoría |
+| PUT | `/api/categories/:id` | admin | Actualizar categoría |
+| DELETE | `/api/categories/:id` | admin | Eliminar categoría |
 | GET | `/api/orders` | token | Órdenes (admin: todas; cliente: las suyas) |
-| POST | `/api/orders` | token | Crear orden (precios tomados de la base de datos) |
+| POST | `/api/orders` | token | Crear orden (los precios se toman de la base de datos) |
 | POST | `/api/payments/create-preference` | token | Crea la preferencia de MercadoPago y devuelve `init_point` |
 | POST | `/api/payments/webhook` | — | Notificaciones de MercadoPago (actualiza el estado de la orden) |
 
